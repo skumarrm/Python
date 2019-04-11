@@ -1,0 +1,136 @@
+%matplotlib inline
+%tb
+import os
+import sys
+import socket 
+hostname = socket.gethostname() 
+print(hostname)
+
+sys.platform
+
+print(os.system)
+import pandas as pd
+from IPython.display import display, HTML
+import plotly
+import plotly.graph_objs as go
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+init_notebook_mode(connected=True)
+
+columns = ['src_event_name', 'mm_funds_receivable_amount']
+df = pd.read_csv('/vol/etl_jupyterdata1/home/smallisudarsan/test_hql.csv', names=columns)
+html_body=df.to_html(index=False)
+
+x1=df.iloc[:,0]
+y1=df.iloc[:,1]
+
+trace0 = go.Scatter(x=x1, y=y1, 
+                    name="H-model", 
+                    mode="lines+markers") 
+
+mydata = go.Data([trace0])
+
+mylayout = go.Layout(
+    title="src_event_name vs. mms_fund_receivable_amount"
+)
+
+fig = go.Figure(data=mydata, layout=mylayout)
+
+a=plotly.offline.plot(fig, include_plotlyjs=False, output_type='div')
+print(a)
+#plotly.offline.plot(fig)
+
+
+try:
+    #with open("plotly_static_image.png", "rb") as fh:
+        #msgImage = MIMEImage(fh.read())
+        #fh.close()
+    with open("/vol/etl_jupyterdata1/home/smallisudarsan/temp-plot.html", "r") as fh:
+        aPlot = fh.read()
+        fh.close()
+        
+except IOError:
+    msg1 = "Error opening attachment file %s" % "/vol/etl_jupyterdata1/home/smallisudarsan/plotly_static_image.png"
+    msg2 = "Error opening attachment file %s" % "/vol/etl_jupyterdata1/home/smallisudarsan/temp-plot.html"
+    print(msg1)
+    print(msg2)
+    sys.exit(1)
+    
+html_plot= '''
+<html>
+    <head>
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+    <body>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+      <h1>Monthly Report</h1>
+      ''' + aPlot + '''
+    </body>
+</html>'''
+display(HTML(html_plot))
+
+################Testing the Horizontal Bar chart with src_event_name vs mms_fund_recievable_amount###################
+import matplotlib
+import matplotlib.pyplot as plt
+
+plt.barh(x1,y1)
+
+
+#############################################################
+
+#################### E-mail template and sendmail #############################################
+import smtplib
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.image import MIMEImage
+from email import encoders
+
+
+# me == my email address
+# you == recipient's email address
+me = "smallisudarsan@paypal.com"
+you = "smallisudarsan@paypal.com"
+header = 'Content-Disposition', 'attachment; filename="%s"' % "Daily_Report.csv"
+
+# Create message container - the correct MIME type is multipart/alternative.
+msg = MIMEMultipart('alternative')
+msg['Subject'] = "Report"
+msg['From'] = me
+msg['To'] = you
+
+# Create the body of the message (a plain-text and an HTML version).
+text_body="Hi!Report of bt_sap_recon_view - Constant='19' data is below"
+
+# Record the MIME types of both parts - text/plain and text/html.
+#part1 = MIMEText(text_body, 'plain')
+#part2 = MIMEText(html_body, 'html')
+part3 = MIMEText(html_plot,'html')
+print(html_plot)
+attachment = MIMEBase('application', "octet-stream")
+try:
+        with open("/vol/etl_jupyterdata1/home/smallisudarsan/test_hql.csv", "rb") as fh:
+            data = fh.read()
+            attachment.set_payload(data)
+            encoders.encode_base64(attachment)
+            attachment.add_header(*header)
+            msg.attach(attachment)
+except IOError:
+        msg = "Error opening attachment file %s" % "/vol/etl_jupyterdata1/home/smallisudarsan/test_hql.csv"
+        print(msg)
+        sys.exit(1)
+
+# Attach parts into message container.
+# According to RFC 2046, the last part of a multipart message, in this case
+# the HTML message, is best and preferred.
+#msg.attach(part1)
+#msg.attach(part2)
+msg.attach(part3)
+#msg.attach(msgImage)
+#msg.attach(html_plot)
+# Send the message via local SMTP server.
+s = smtplib.SMTP('localhost')
+# sendmail function takes 3 arguments: sender's address, recipient's address
+# and message to send - here it is sent as one string.
+s.sendmail(me, you, msg.as_string())
+s.quit()
