@@ -7,7 +7,7 @@ resource "aws_s3_bucket" "my_first_bucket" {
   # NOTE: S3 bucket names must be unique across _all_ AWS accounts, so
   # this name must be changed before applying this example to avoid naming
   # conflicts.
-  bucket = "test-bucket"
+  bucket = "test-bucket-E146"
   acl    = "private"
 }
 
