@@ -1,7 +1,9 @@
 variable "region" {
-      value = "${var.region}"
+      type = string
+      default = "${var.region}"
 }
 
 variable "ec2-instance-name" {
-     value = "${var.ec2-instance-name}"
+     type = string
+     default = "${var.ec2-instance-name}"
 }
