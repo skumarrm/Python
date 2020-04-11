@@ -3,7 +3,7 @@ provider "aws" {
   region     = var.region
 }
 
-resource "aws_s3_bucket" "my_first_bucket" {
+resource "aws_s3_bucket" "my_first_bucket_E146" {
   # NOTE: S3 bucket names must be unique across _all_ AWS accounts, so
   # this name must be changed before applying this example to avoid naming
   # conflicts.
@@ -17,7 +17,7 @@ resource "aws_instance" "myFirst_Terraform_Instance" {
   tags = {
         Name = var.ec2-instance-name
        }
-  depends_on = [aws_s3_bucket.my_first_bucket]
+  depends_on = [aws_s3_bucket.my_first_bucket_E146]
 } 
 
 resource "aws_eip" "ip" {
