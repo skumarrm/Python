@@ -1,9 +1,9 @@
 variable "region" {
       type = string
-      default = "${var.region}"
+      default = "us-east-1"
 }
 
 variable "ec2-instance-name" {
      type = string
-     default = "${var.ec2-instance-name}"
+     default = "Terraform_EC2_Instance"
 }
