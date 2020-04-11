@@ -10,4 +10,4 @@ resource "aws_instance" "myFirst_Terraform_Instance" {
   tags = {
         Name = var.ec2-instance-name
        }
-}
+} 
