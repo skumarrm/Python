@@ -25,8 +25,7 @@ resource "aws_instance" "myFirst_Terraform_Instance" {
   depends_on = [aws_s3_bucket.my_first_bucket_mmda_colony]
   
  provisioner "local-exec" {
-    command = "echo ${aws_instance.myFirst_Terraform_Instance.public_ip} > $HOME/ip_address.txt"
-    command = "cd $HOME/.ssh/|ssh-keygen -t rsa -f ~/.ssh/terraform -P ""|chmod 400 ~/.ssh/terraform"
+    command = "cd $HOME/.ssh/|ssh-keygen -t rsa -f ~/.ssh/terraform -P ''|chmod 400 ~/.ssh/terraform"
   }
   
   connection {
