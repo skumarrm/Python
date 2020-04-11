@@ -3,11 +3,11 @@ provider "aws" {
   region     = var.region
 }
 
-resource "aws_s3_bucket" "my_first_bucket_E146" {
+resource "aws_s3_bucket" "my_first_bucket_mmda_colony" {
   # NOTE: S3 bucket names must be unique across _all_ AWS accounts, so
   # this name must be changed before applying this example to avoid naming
   # conflicts.
-  bucket = "test-bucket-E146"
+  bucket = "test-bucket-mmda"
   acl    = "private"
 }
 
@@ -17,7 +17,7 @@ resource "aws_instance" "myFirst_Terraform_Instance" {
   tags = {
         Name = var.ec2-instance-name
        }
-  depends_on = [aws_s3_bucket.my_first_bucket_E146]
+  depends_on = [aws_s3_bucket.my_first_bucket_mmda_colony]
 } 
 
 resource "aws_eip" "ip" {
