@@ -3,12 +3,21 @@ provider "aws" {
   region     = var.region
 }
 
+resource "aws_s3_bucket" "my_first_bucket" {
+  # NOTE: S3 bucket names must be unique across _all_ AWS accounts, so
+  # this name must be changed before applying this example to avoid naming
+  # conflicts.
+  bucket = "test-bucket"
+  acl    = "private"
+}
+
 resource "aws_instance" "myFirst_Terraform_Instance" {
   ami           = "ami-2757f631"
   instance_type = "t2.micro"
   tags = {
         Name = var.ec2-instance-name
        }
+  depends_on = [aws_s3_bucket.my_first_bucket]
 } 
 
 resource "aws_eip" "ip" {
