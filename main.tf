@@ -26,6 +26,7 @@ resource "aws_instance" "myFirst_Terraform_Instance" {
   
  provisioner "local-exec" {
     command = "echo ${aws_instance.myFirst_Terraform_Instance.public_ip} > $HOME/ip_address.txt"
+    command = "cd $HOME/.ssh/|ssh-keygen -t rsa -f ~/.ssh/terraform -P ""|chmod 400 ~/.ssh/terraform"
   }
   
   connection {
@@ -50,4 +51,6 @@ resource "aws_eip" "ip" {
     instance = aws_instance.myFirst_Terraform_Instance.id
 }
 
-
+output "ip" {
+  value = aws_eip.ip.public_ip
+}
