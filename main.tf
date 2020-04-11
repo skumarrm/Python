@@ -11,3 +11,4 @@ resource "aws_instance" "myFirst_Terraform_Instance" {
         Name = var.ec2-instance-name
        }
 } 
+
